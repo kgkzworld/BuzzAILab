@@ -49,7 +49,7 @@ The shared IT Infrastructure Project Manager coordinates dependencies and status
 | Infrastructure Squad | Local-host infrastructure, reliability, delivery systems, support, and recovery | [Infrastructure Squad](../agents/squads/infrastructure-squad.md) |
 | Security Squad | Security design, implementation, operations, verification, and security research | [Security Squad](../agents/squads/security-squad.md) |
 | Cloud Squad | Explicitly approved Azure/AWS test environments, capacity, automation, and cost visibility | [Cloud Squad](../agents/squads/cloud-squad.md) |
-| Researcher Squad | General research with primary-source evidence and explicit uncertainty | [Researcher Squad](../agents/squads/researcher-squad.md) |
+| Researcher Squad | General research with primary-source evidence and explicit uncertainty | Referenced as an adjacent pattern; its three research personas are outside this 51-persona platform library. |
 
 Security Research Analyst belongs to Security Squad for security-specialist research and evidence synthesis. Broad research remains with the two General Researcher personas.
 

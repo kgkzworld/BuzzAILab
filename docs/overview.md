@@ -35,6 +35,14 @@ Docker volumes     → PostgreSQL, Redis, and MinIO development state
 
 ## Map of this repository
 
+### Installation
+
+| Document | What it answers |
+| --- | --- |
+| [Install with AI](../INSTALL_WITH_AI.md) | The copy/paste prompt that makes an AI assistant inspect, plan, install, and validate the correct Windows or macOS path |
+| [Installation Walkthrough](installation-walkthrough.md) | The complete cross-platform flow and the real failure patterns to recognize |
+| [Getting Started](getting-started.md) | How to go from a working Buzz app to one validated agent |
+
 ### Design and mechanics
 
 | Document | What it answers |
@@ -64,6 +72,8 @@ Docker volumes     → PostgreSQL, Redis, and MinIO development state
 | [Environment and Operations](environment-and-operations.md) | Environment variables, daily commands, fleet checks, troubleshooting, and incident records |
 
 ## Installation models
+
+For a guided start, use [Install with AI](../INSTALL_WITH_AI.md). It performs a read-only machine preflight before proposing any installation change.
 
 **macOS** is the current primary target — build from an official tag, install to `/Applications` with real companion binaries. Start at [macOS Source Build](runbooks/macos-source-build.md).
 

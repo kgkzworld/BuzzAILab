@@ -13,21 +13,21 @@ category: "AI / Buzz / Operations"
 # Buzz - Windows Setup Runbook
 
 > [!note] Status
-> Historical Windows build and recovery runbook. The installation was completed on 2026-08-06; use [Buzz - macOS and Server Deployment Runbook](macos-and-server-deployment.md) for macOS or a new operator's server.
+> Shareable Windows installation runbook, grounded in a completed native Windows build. Current users must query an official release tag and verify that release's requirements rather than copying the historical versions below.
 
 ## Recommended layout
 
 ```text
-D:\Source\Dev\buzz # live repository
-<vault>\010_Knowledge_Base\AI\Buzz # documentation
+C:\src\buzz                         # live repository
+C:\Users\<you>\Documents\BuzzNotes # non-secret documentation
 ```
 
 Do not clone Buzz into the Google Drive-backed Obsidian vault.
 
 ## Stage 1: Use the official source
 
-- [x] Select the official upstream repository: `https://github.com/block/buzz`.
-- [x] Reject `cjain-ai/buzz-jack-dorsey` for installation; it had no unique commits and was 123 commits behind upstream when checked on 2026-08-06.
+- [ ] Select the official upstream repository: `https://github.com/block/buzz`.
+- [ ] Select and record an immutable official release tag.
 - [ ] Record the selected branch and commit in [Buzz - Decisions and Build Log](../decisions-and-build-log.md).
 
 Selected source:
@@ -42,7 +42,7 @@ https://github.com/block/buzz
 - Run repository commands from **Git Bash**, including `. ./bin/activate-hermit` and `just` recipes.
 - WSL is not required for the Buzz source tree, desktop app, or agent shell.
 - Docker Desktop may use its WSL 2 backend internally; that implementation detail does not make Buzz a WSL installation.
-- Keep the repository on the Windows filesystem at `D:\Source\Dev\buzz`.
+- Keep the repository on the Windows filesystem, for example `C:\src\buzz`.
 - Avoid running the same checkout interchangeably from Git Bash and WSL because path formats, permissions, dependencies, and build artifacts can diverge.
 - If shell auto-detection selects WSL Bash, set `BUZZ_SHELL=C:\Program Files\Git\bin\bash.exe`.
 
@@ -65,11 +65,12 @@ When Hermit is used, avoid independently upgrading pinned project tools without 
 Clone the official repository:
 
 ```bash
-cd /d/Source/Dev
-git clone https://github.com/block/buzz.git
+cd /c/src
+git clone --branch desktop-vX.Y.Z --depth 1 https://github.com/block/buzz.git
 cd buzz
-git status
+git status --short --branch
 git rev-parse HEAD
+git remote -v
 ```
 
 Record the resolved commit before setup.
@@ -166,19 +167,20 @@ just test
 
 Keep agent command approval enabled until the environment boundaries and destructive recipes have been reviewed.
 
-## Installed environment — 2026-08-06
+## Known fixes from the completed Windows build
 
-- Source: `D:\Source\Dev\buzz`
+The following observations explain what was fixed in the real setup. They are troubleshooting evidence, not instructions to copy versions or configuration blindly:
+
 - Repository: `https://github.com/block/buzz`
 - Installed commit: `9213090f6076bf3b7667b9b984752b3e47ef8f2f`
 - Desktop version: `0.5.5`
 - Installed application: `C:\Program Files\Buzz\buzz-desktop.exe`
 - Relay: `ws://localhost:3001`
 - Health endpoint: `http://127.0.0.1:8080/_readiness`
-- Port 3001 was selected because Obsidian owns local port 3000 on this machine.
+- Port 3001 was selected because another local application owned port 3000. Identify the current owner before choosing an alternative; never terminate it blindly.
 - Docker Desktop uses its WSL 2 backend; Buzz and its source/build toolchain remain native Windows.
 - The repository's generated Hermit launchers do not currently bootstrap on Windows Git Bash. The documented manual-toolchain path was used instead: Rust 1.95.0 MSVC, pnpm 11.4.0, `just` 1.46.0, Lefthook 2.1.3, CMake 4.3.1, and Visual Studio 2022 C++ Build Tools.
-- An ignored local `docker-compose.override.yml` raises Keycloak's memory limit from 512 MB to 1 GB and replaces its broken `/health/ready` probe with a working root HTTP probe.
+- An ignored local `docker-compose.override.yml` raised Keycloak's memory limit from 512 MB to 1 GB and replaced a health probe aimed at a disabled endpoint with a verified working endpoint. Apply an override only after reproducing the issue on the selected release.
 
 ## Automatic startup — configured 2026-08-06
 

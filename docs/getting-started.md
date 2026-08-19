@@ -5,7 +5,9 @@ tags: [buzz, setup]
 ---
 # Getting Started
 
-The goal of this page is **one working, validated agent** — not a fleet. Everything in this repository was built by repeating this loop 51 times.
+This page starts after the Buzz desktop application is working. If Buzz is not installed yet, begin with the [AI-guided installer](../INSTALL_WITH_AI.md) or the [Windows/macOS installation walkthrough](installation-walkthrough.md).
+
+The goal here is **one working, validated agent** — not a fleet. Everything in this repository was built by repeating this loop 51 times.
 
 > [!warning] Read [SECURITY.md](../SECURITY.md) first
 > Agents act on your machine, `owner-only` does not mean what it sounds like, and an unattended fleet can exhaust a paid plan in an afternoon. Ten minutes there saves the expensive lessons.
@@ -128,7 +130,7 @@ Full staged procedure and the four waves: [Creation and Validation Runbook](../a
 | --- | --- |
 | Understand the mechanics before scaling | [ARCHITECTURE.md](../ARCHITECTURE.md) |
 | Know which model to put behind which role | [Runtime and LLM Assignment Matrix](../agents/07-runtime-and-llm-assignment-matrix.md) |
-| Run local models instead of hosted | [Local Harness Delegation](../agents/09-local-harness-delegation.md) |
+| Choose hosted versus local models | [Runtime and LLM Assignment Matrix](../agents/07-runtime-and-llm-assignment-matrix.md) |
 | Move to another machine | [Machine Migration and Recovery](runbooks/machine-migration-and-recovery.md) |
 | Look up a term | [Glossary](glossary.md) |
 

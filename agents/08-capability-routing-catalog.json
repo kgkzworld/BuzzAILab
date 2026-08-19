@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "lookup_order": [
+    "channel_roster",
+    "squad_roster",
+    "global_capability_catalog",
+    "runtime_readiness"
+  ],
+  "scoped_rosters": {
+    "Lin Security Squad": "squads/lin-security-squad.md",
+    "Win Security Squad": "squads/win-security-squad.md",
+    "Infrastructure Squad": "squads/infrastructure-squad.md",
+    "Security Squad": "squads/security-squad.md",
+    "Cloud Squad": "squads/cloud-squad.md"
+  },
+  "rules": {
+    "lookup_required_before_readiness": true,
+    "squad_membership_is_not_capability": true,
+    "managers_are_workers": false,
+    "create_only_when_no_eligible_owner_exists": true,
+    "required_dispatch_record": [
+      "task_title",
+      "task_type",
+      "target_platform",
+      "matched_capability",
+      "selected_owner",
+      "excluded_candidates",
+      "fallback_sequence"
+    ]
+  },
+  "capabilities": {
+    "security_repository_assessment": {
+      "owners": ["DevSecOps Engineer", "Vulnerability Management Engineer"],
+      "supports": ["Security Engineer", "Security Architect"],
+      "excluded": ["Security Research Analyst", "manager"]
+    },
+    "security_control_implementation": {
+      "owners": ["Security Engineer"],
+      "supports": ["DevSecOps Engineer", "OS Developer and Automation Engineer", "SecOps Engineer"],
+      "excluded": ["Security Research Analyst", "manager"]
+    },
+    "security_ci_cd_gate": {
+      "owners": ["DevSecOps Engineer"],
+      "supports": ["DevOps Engineer", "Vulnerability Management Engineer"],
+      "excluded": ["Security Research Analyst", "manager"]
+    },
+    "security_operations_triage": {
+      "owners": ["SecOps Engineer", "Detection and Response Engineer"],
+      "supports": ["Incident Commander", "Security Engineer"],
+      "excluded": ["Security Research Analyst"]
+    },
+    "security_incident_coordination": {
+      "owners": ["Incident Commander"],
+      "supports": ["SecOps Engineer", "Detection and Response Engineer"],
+      "excluded": ["Security Research Analyst"]
+    },
+    "security_architecture_or_threat_model": {
+      "owners": ["Security Architect"],
+      "supports": ["Security Engineer", "Identity and Access Engineer", "Secrets and PKI Engineer"],
+      "excluded": ["Security Research Analyst"]
+    },
+    "vulnerability_management": {
+      "owners": ["Vulnerability Management Engineer"],
+      "supports": ["Security Engineer", "DevSecOps Engineer"],
+      "excluded": ["Security Research Analyst"]
+    },
+    "identity_and_access": {
+      "owners": ["Identity and Access Engineer"],
+      "supports": ["Security Architect", "Security Engineer"],
+      "excluded": ["Security Research Analyst"]
+    },
+    "secrets_certificates_or_pki": {
+      "owners": ["Secrets and PKI Engineer"],
+      "supports": ["Identity and Access Engineer", "Security Engineer"],
+      "excluded": ["Security Research Analyst"]
+    },
+    "governance_risk_or_compliance": {
+      "owners": ["GRC Engineer"],
+      "supports": ["Security Architect"],
+      "excluded": ["Security Research Analyst"]
+    },
+    "strategic_security_research_or_weekly_brief": {
+      "owners": ["Security Research Analyst"],
+      "supports": [],
+      "excluded": ["SecOps Engineer", "Security Engineer", "DevSecOps Engineer"]
+    },
+    "platform_or_infrastructure_implementation": {
+      "owners": ["Platform Engineer", "OS Developer and Automation Engineer"],
+      "supports": ["DevOps Engineer", "Network and DNS Engineer"],
+      "excluded": ["Security Research Analyst"]
+    },
+    "cloud_implementation": {
+      "owners": ["Cloud Engineer"],
+      "supports": ["DevOps Engineer", "FinOps and Capacity Engineer"],
+      "excluded": ["Security Research Analyst"]
+    }
+  },
+  "platform_rule": "Choose Windows-prefixed owners for Windows targets and Lin-prefixed owners for Linux or macOS targets."
+}

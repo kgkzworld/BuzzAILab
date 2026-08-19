@@ -222,4 +222,3 @@ Until the environment is proven:
 - `TESTING.md`
 - `.env.example`
 - Agent-specific setup documentation
-

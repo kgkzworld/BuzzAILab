@@ -21,4 +21,3 @@ RETURN TO: <requesting agent or the owner>
 ```
 
 The receiving agent acknowledges, identifies missing prerequisites, and owns only the requested result. It returns a completed result or an explicit blocker; silence is never a valid handoff outcome.
-

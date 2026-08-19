@@ -1,8 +1,17 @@
 # BuzzAILab
 
-A field record of building a multi-agent workspace on [Buzz](https://github.com/block/buzz) — 51 infrastructure, security, and cloud personas with shared policy, staged deployment, and a validation record for every one of them.
+Build your own [Buzz](https://github.com/block/buzz) workspace on Windows or macOS with an AI assistant guiding the installation. This repository turns one real, hard-won setup into a repeatable walkthrough: install Buzz from the official source, verify the machine and runtime, secure the owner identity, and add the first validated AI agent.
 
-This is not a framework and there is nothing to install from here. It is the documentation, prompts, and hard-won mistakes from one real build, sanitized and published so someone else can skip the expensive parts.
+This repository is the **installer guide and reusable agent library**. It does not redistribute Buzz or replace the official [`block/buzz`](https://github.com/block/buzz) source.
+
+## Install Buzz with an AI assistant
+
+1. Open **[INSTALL_WITH_AI.md](INSTALL_WITH_AI.md)**.
+2. Copy the installer prompt into Codex, Claude Code, ChatGPT, or another tool-capable AI assistant running on the computer you want to set up.
+3. Let it perform the read-only preflight and show you the compatibility plan.
+4. Approve the plan, then follow the assistant through build, launch, identity backup, and the first agent validation.
+
+Prefer to work manually? Use the **[installation walkthrough](docs/installation-walkthrough.md)** and choose the [Windows](docs/runbooks/windows-setup.md) or [macOS](docs/runbooks/macos-source-build.md) path.
 
 ## What Buzz is
 
@@ -14,10 +23,9 @@ Buzz manages the agents. It does not supply the models — the fleet here mixes 
 
 | | |
 | --- | --- |
-| **[`agents/`](agents/)** | The library. 51 platform personas, 26 role charters, 4 squads, the shared operating contract, approval gates, handoff contract, and the runtime assignment matrix. |
+| **[`agents/`](agents/)** | The library. 51 platform personas, 26 role charters, 5 squad templates, the shared operating contract, approval gates, handoff contract, and the runtime assignment matrix. |
 | **[`agents/validation-record-template.md`](agents/validation-record-template.md)** | Sanitized template for recording portable acceptance evidence without publishing host reconnaissance. |
 | **[`docs/`](docs/)** | Architecture, roster, squad mechanics, the decisions log, and runbooks for macOS, Windows, deployment, and migration. |
-| **[`assets/avatars/`](assets/avatars/)** | 75 generated agent avatars, a manifest, and the script that applies them to a local registry. |
 
 ## The three-layer agent
 
@@ -33,11 +41,13 @@ Squad `instructions` add coordination rules on top, but never replace the three 
 
 ## Start here
 
-1. **[SECURITY.md](SECURITY.md)** — including the private-key mistake this build actually made. Read it before anything else.
-2. **[docs/getting-started.md](docs/getting-started.md)** — the shortest safe path to one validated agent.
-3. **[docs/personalize.md](docs/personalize.md)** — every placeholder and what to replace it with.
-4. **[ARCHITECTURE.md](ARCHITECTURE.md)** — how the substrate, the identity model, and the agent library fit together.
-5. **[docs/overview.md](docs/overview.md)** — a map of every document here.
+1. **[INSTALL_WITH_AI.md](INSTALL_WITH_AI.md)** — the copy/paste AI-guided installer.
+2. **[docs/installation-walkthrough.md](docs/installation-walkthrough.md)** — the complete human-readable Windows/macOS flow.
+3. **[SECURITY.md](SECURITY.md)** — including the private-key mistake this build actually made.
+4. **[docs/getting-started.md](docs/getting-started.md)** — from a working Buzz app to one validated agent.
+5. **[docs/personalize.md](docs/personalize.md)** — every placeholder and what to replace it with.
+6. **[ARCHITECTURE.md](ARCHITECTURE.md)** — how the substrate, the identity model, and the agent library fit together.
+7. **[docs/overview.md](docs/overview.md)** — a map of every document here.
 
 Unfamiliar with the vocabulary? [docs/glossary.md](docs/glossary.md) defines persona vs identity, `team_id`, sibling, ACP, and the rest.
 

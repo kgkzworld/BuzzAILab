@@ -7,7 +7,7 @@ This repository contains the documentation, prompts, and hard-won mistakes from 
 
 - Added a copy/paste AI installer prompt for Windows and macOS.
 - Added an end-to-end installation walkthrough with the real Windows and macOS failure patterns.
-- Reframed the landing page around installing Buzz from official source instead of presenting the repository as a passive field record.
+- Reframed the landing page around installing Buzz from the official source instead of presenting the repository as only a historical account.
 - Restored the complete public 51-persona library: platform prompts, role charters, squad instructions, creation runbook, runtime guidance, and validation template.
 
 ## What This Repository Contains
@@ -41,4 +41,4 @@ This repository contains the documentation, prompts, and hard-won mistakes from 
 - Ten Codex ACP workers take eight minutes to cold-start
 
 ## Status
-This documents a working build and provides a repeatable installer guide; it is not a supported Buzz distribution. Version-specific details were true when recorded and drift quickly.
+This provides a repeatable Buzz installer guide and reusable agent library; it is not a redistribution of the Buzz application. Version-specific details can drift and should be checked against upstream.

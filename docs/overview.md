@@ -18,7 +18,7 @@ Buzz manages agents and collaboration. It does not supply the models. Agents can
 
 - [Official repository](https://github.com/block/buzz) — the authoritative source for installation, releases, documentation, and development. Always verify a changing detail against upstream rather than against this repository.
 
-Everything here is a field record of one build, not a substitute for the upstream docs. Where the two disagree, upstream is right and this repository is stale.
+This repository is an installation walkthrough and reusable agent library built from one working Buzz setup. It complements, but does not replace, the upstream Buzz documentation. Where the two disagree, verify the changing implementation detail against upstream and update this guide when appropriate.
 
 ## The guiding separation
 

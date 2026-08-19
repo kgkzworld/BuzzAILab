@@ -72,7 +72,7 @@ The files keep their YAML frontmatter and folder structure, and the links are re
 
 ## Status and scope
 
-This documents a working build, not a supported product. Version-specific details — Buzz Desktop 0.5.x behavior, ACP quirks, adapter patches — were true when recorded and drift quickly. Verify anything load-bearing against [block/buzz](https://github.com/block/buzz).
+This is a practical installation guide and reusable agent library, not a redistribution of Buzz itself. Version-specific details — Buzz Desktop 0.5.x behavior, ACP quirks, adapter patches — can drift, so verify changing implementation details against [block/buzz](https://github.com/block/buzz).
 
 Personal agents are described only where they illustrate reusable architecture or operating lessons.
 

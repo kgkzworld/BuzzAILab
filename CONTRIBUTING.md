@@ -1,6 +1,6 @@
 # Contributing
 
-This is a personal field record shared with friends, family, and anyone else rebuilding something similar. Corrections and additions are welcome; so is forking it and going your own way.
+This is a practical Buzz installation walkthrough and reusable agent library shared with friends, family, and anyone rebuilding a Buzz workspace. Corrections and additions are welcome; so is forking it and going your own way.
 
 ## Before you open a pull request
 

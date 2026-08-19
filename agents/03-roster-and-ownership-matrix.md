@@ -91,4 +91,3 @@ category: "AI / Buzz / Agents"
 | Release promotion | Release Engineer | DevOps, Packaging |
 | Backup design and restore proof | Backup and Recovery Engineer | System owner, GRC |
 | Portfolio coordination | IT Infrastructure Project Manager | All technical owners |
-

@@ -11,7 +11,7 @@ This repository contains the documentation, prompts, and hard-won mistakes from 
 - **Security Documentation**: SECURITY.md detailing private-key mistakes and security lessons learned
 - **Runbooks & Guides**: 
   - Getting started guide
-  - Personalization instructions  
+  - Personalization instructions
   - Environment and operations procedures
   - Squad management documentation
   - Glossary of terms

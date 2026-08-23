@@ -3,6 +3,15 @@
 ## Overview
 This repository contains the documentation, prompts, and hard-won mistakes from one real build of a multi-agent workspace on [Buzz](https://github.com/block/buzz), with 51 infrastructure, security, and cloud personas.
 
+## Declarative harness update — 2026-08-23
+
+- **The model moved out of the roster and into a registry.** Roles are now model-independent `.role.md` sources with a `preferred_runtime_class`; a single `runtime-classes.json` is the only file that names a model; a compiler resolves the two into deployable packs. Swapping a model is one edit and a recompile instead of an edit per record.
+- **Rewrote [ARCHITECTURE.md](ARCHITECTURE.md) §6** around that resolution step, including why a strict persona schema forces roles to compile into packs rather than be authored as packs.
+- **Superseded the runtime matrix.** [agents/07](agents/07-runtime-and-llm-assignment-matrix.md) now opens with a pointer to the current registry and closes with the live runtime classes. The dated sections between are kept for their reasoning, not their model names.
+- **Added an `image_generation` capability** to [agents/08](agents/08-capability-routing-catalog.json), with the routing rule that a pinned capability overrides scoring — the correction that stopped image requests from being scored onto a vulnerability-management engineer.
+- **Four new lessons** in the README, each from a real failure: synthetic test wording hides classifier defects; one queue flush can hold more than one message; the desktop app rewrites its registry on exit; an image agent orchestrates a renderer rather than running on it.
+- **New decisions and build-log entries** covering the declarative cutover, identity-free workers, and the native image-routing correction.
+
 ## Friends-and-family installer update
 
 - Added a copy/paste AI installer prompt for Windows and macOS.
@@ -39,6 +48,10 @@ This repository contains the documentation, prompts, and hard-won mistakes from 
 - "owner-only" does not mean "only the human"
 - A handoff written in prose fires nothing
 - Ten Codex ACP workers take eight minutes to cold-start
+- Testing a router with synthetic wording tests the wording, not the router
+- One queue flush can hold more than one message
+- The desktop app rewrites its agent registry when it exits
+- An image agent does not run on the image model
 
 ## Status
 This provides a repeatable Buzz installer guide and reusable agent library; it is not a redistribution of the Buzz application. Version-specific details can drift and should be checked against upstream.

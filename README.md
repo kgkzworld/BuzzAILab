@@ -39,6 +39,28 @@ Squad `instructions` add coordination rules on top, but never replace the three 
 
 `Lin` means **Linux and macOS**. Every Lin agent detects the actual OS before acting rather than assuming Linux commands work on a Mac.
 
+## The model belongs in one file, not eighty-five
+
+The second idea worth stealing. A role should describe **what it does**. Nothing about a role's mission changes when you swap the model underneath it — so the model name does not belong in the role at all.
+
+```text
+roles/*.role.md          config/runtime-classes.json
+(mission · tools ·       (the ONE place a model
+ gates · runtime class)   name is ever written)
+        \                      /
+         v                    v
+           compile → pack → guarded sync onto existing identities
+```
+
+The role declares a *class* — `reasoning`, `coding`, `image-orchestrator`, `cloud-claude`. The registry says what each class resolves to today. A compiler joins them and emits deployable personas with the model stamped in.
+
+Change a model once, recompile, and every role bound to that class re-binds. No role source changes; nothing is missed. This replaced a hand-edited registry where swapping one model meant editing every record that mentioned it and hoping you found them all.
+
+Two constraints make it work, both learned the hard way:
+
+- **A deployable persona rejects unknown fields**, so factory metadata — preferred runtime class, allowed tools, write scope, quality gates — has to live in the role *source* and be stripped during compilation. That constraint is the whole reason roles compile into packs rather than being authored as packs directly.
+- **Identity is not part of the persona.** The sync maps compiled personas onto existing identities and preserves every cryptographic field. A persona is replaceable; a keypair is not.
+
 ## Start here
 
 1. **[INSTALL_WITH_AI.md](INSTALL_WITH_AI.md)** — the copy/paste AI-guided installer.
@@ -65,6 +87,10 @@ Each of these was a real failure in this build. They are documented in full wher
 - **`owner-only` does not mean "only the human."** It admits verified same-owner siblings, so your agents can already fire each other's turns by default. → [SECURITY.md](SECURITY.md)
 - **A handoff written in prose fires nothing.** A turn starts only on a resolved `@mention` carrying a `p` tag; naming an agent in a message body is just text. The pipeline reads as if it is running while nothing happens. → [Agent Roster](docs/agent-roster.md)
 - **Ten Codex ACP workers take eight minutes to cold-start,** and anything dispatched in that window vanishes without a trace in the turn log. → [Environment and Operations](docs/environment-and-operations.md)
+- **Testing a router with synthetic wording tests the wording, not the router.** An intent classifier was validated with a magic phrase and a `Brief:` marker, and passed. The first ordinary sentence a human typed — "I need an image created" — fell through to the generic classifier and was assigned to a vulnerability-management engineer, which correctly declined it. Test the sentence a person would actually type. → [Runtime and LLM Assignment Matrix](agents/07-runtime-and-llm-assignment-matrix.md)
+- **One queue flush can hold more than one message.** A controller concatenated everything in the batch into the worker's prompt, so a failed reply from the previous attempt became part of the next request's instructions. Select the *individual* event that matched, and take the requester's identity from that same event. → [Decisions and Build Log](docs/decisions-and-build-log.md)
+- **The desktop app rewrites its agent registry when it exits.** Patch a live registry while the app is running and the edit is gone at quit. The order is quit, patch, relaunch, verify zero drift — every time. → [Environment and Operations](docs/environment-and-operations.md)
+- **An image agent does not run *on* the image model.** It is a conversational orchestrator with a renderer declared as a tool backend. Collapsing "runtime" and "backend" into one column produces an agent that cannot discuss the work it is doing. → [Runtime and LLM Assignment Matrix](agents/07-runtime-and-llm-assignment-matrix.md)
 
 ## Using this with Obsidian
 

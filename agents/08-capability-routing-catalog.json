@@ -26,7 +26,8 @@
       "selected_owner",
       "excluded_candidates",
       "fallback_sequence"
-    ]
+    ],
+    "capability_pin_overrides_scoring": true
   },
   "capabilities": {
     "security_repository_assessment": {
@@ -93,6 +94,11 @@
       "owners": ["Cloud Engineer"],
       "supports": ["DevOps Engineer", "FinOps and Capacity Engineer"],
       "excluded": ["Security Research Analyst"]
+    },
+    "image_generation": {
+      "owners": ["Co-Illustrator"],
+      "supports": [],
+      "excluded": ["Vulnerability Management Engineer", "Security Research Analyst", "manager"]
     }
   },
   "platform_rule": "Choose Windows-prefixed owners for Windows targets and Lin-prefixed owners for Linux or macOS targets."

@@ -1,12 +1,20 @@
 ---
 title: "Agent Runtime and LLM Assignment Matrix"
 created: 2026-08-16
-updated: 2026-08-16
-status: hybrid-runtime-baseline-applied
+updated: 2026-08-23
+status: declarative-runtime-registry-applied
 tags: [buzz, agents, runtime, local-llm, ollama]
 category: "AI / Buzz / Agents"
 ---
 # Agent Runtime and LLM Assignment Matrix
+
+> **Read this first — 2026-08-23.** Everything below is now *history*. Model
+> selection no longer lives in this document or in any deployment record. It
+> lives in a single registry file, and roles resolve against it at compile time.
+> See [Declarative runtime-class registry](#declarative-runtime-class-registry--2026-08-23)
+> at the end of this file for the current, authoritative routing. The dated
+> sections in between are preserved because the *reasoning* behind each
+> promotion and refusal is still useful — the model names in them are not.
 
 ## 2026-08-16 Local-Majority Production Routing
 
@@ -164,3 +172,64 @@ reuse its evidence at the cloud review boundary.
 The live registry contains no assignments to GPT-OSS 120B, Qwen3-Coder Next,
 Qwen3.6 27B, Qwen2.5-Coder 7B, or DeepSeek. Its pre-migration private backup is
 `managed-agents.pre-two-model-20260817.json` beside the deployed registry.
+
+## Declarative runtime-class registry — 2026-08-23
+
+This section supersedes every matrix above.
+
+### What changed
+
+The fleet stopped being an imperative registry of hand-edited model strings and
+became a declarative one. The mechanics:
+
+- A **role** (`roles/*.role.md`) declares mission, tools, quality gates, and a
+  `preferred_runtime_class`. It never names a model.
+- A **registry** (`config/runtime-classes.json`) is the only file in the system
+  where a model name is written.
+- A **compiler** (`compile-pack.py`) joins them and emits a pack — an
+  Open-Plugin-Spec directory of `.persona.md` files with the model stamped in.
+- A **guarded lifecycle** compiles, validates, diffs, stops the app, syncs onto
+  existing identities, relaunches, and asserts zero drift. Touching a deployment
+  record requires a separate explicit flag.
+
+The payoff is the thing this matrix was always trying and failing to be: change
+a model once, recompile, and every role bound to that class re-binds. No role
+source changes. Nothing is missed.
+
+### Current runtime classes
+
+| Class | Model | Runtime | Notes |
+| --- | --- | --- | --- |
+| `reasoning` | `qwen3.6-35b-a3b-abliterated-local` | OpenCode | Primary local reasoning tier |
+| `coding` | `qwen3-coder-30b-local` | OpenCode | Repository and tool-heavy work |
+| `coding-secondary` | `qwen3-coder-30b-local` | `buzz-agent` | Deliberate runtime exception |
+| `image-orchestrator` | Conversational model orchestrating FLUX.2 Klein 9B | OpenCode + ComfyUI | The image model is a *tool backend*, not the agent's runtime |
+| `cloud-claude` | Runtime default, not pinned | Claude | Escalation only |
+| `cloud-codex` | `gpt-5.6-terra[medium]` | Codex | Buzz infrastructure and escalation |
+
+Retired in this migration: the dense 70B general tier, and three obsolete
+Llama 3.3 deployment handles. The live fleet reconciled to **85 role definitions
+paired with 85 deployments**, compiled as five grouped packs — `career` (11),
+`core-managers` (11), `narrative-creative` (8), `research-other` (5), and
+`security-platform` (50).
+
+### The correction worth copying
+
+The first pass modelled the illustration agent as *running on* the image model.
+That is wrong, and it is an easy mistake to make when a matrix has one column
+for "model."
+
+An image agent is a **conversational orchestrator** with an image generator
+declared as a tool backend. Its runtime class and its rendering backend are two
+different fields, and collapsing them produces an agent that cannot hold a
+conversation about the work it is doing.
+
+### Constraints that survived the migration
+
+- Escalation, not replacement. Cloud runtimes remain the final authority.
+- Serialize heavyweight local models; autostart launches harnesses, not models.
+- Never hand-edit live records. The registry plus the lifecycle is the only
+  supported path, and Buzz Desktop rewrites the registry on exit — so the
+  discipline is quit, patch, relaunch, verify zero drift.
+- Identity is preserved across every sync. Personas are replaceable; keypairs
+  are not.

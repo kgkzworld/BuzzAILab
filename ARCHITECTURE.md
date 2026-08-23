@@ -100,31 +100,65 @@ Design rule: reserve squad membership for agents whose *whole purpose* is that s
 
 Detail and the two failure cases: [docs/squads-and-teams.md](docs/squads-and-teams.md).
 
-## 6. Runtime topology
+## 6. Runtime topology: choose the model in exactly one place
 
-Runtime is chosen per agent against the task shape, not uniformly.
+Runtime is chosen per agent against the task shape — but *where* that choice is written matters more than the choice itself.
+
+The original fleet hand-edited a model string into every deployment record. With paired Windows/Lin personas that is two edits per function and a guaranteed drift surface: swapping one model meant touching every record that referenced it, and nothing detected the records you missed.
+
+The fix is a resolution step. A role declares **what it does** and which *class* of runtime it wants. A registry declares **which model each class resolves to**. A compiler joins them.
+
+```text
+roles/*.role.md              config/runtime-classes.json
+(mission, tools, gates,      (the ONE place a model
+ preferred_runtime_class)     name is ever written)
+         \                        /
+          \                      /
+           v                    v
+            compile-pack.py  ← the resolution step
+                    |
+                    v
+        pack/  .plugin/plugin.json + agents/*.persona.md
+                    |
+                    v
+          guarded sync onto existing identities
+```
+
+Swap a model in the registry, recompile, and every role bound to that class re-binds. The role source never changes. This is the single highest-leverage idea in this repository.
 
 ```mermaid
 flowchart TD
-    subgraph Cloud["Cloud control tier"]
-        CL[Claude<br/><i>architecture · governance<br/>incident leadership · synthesis</i>]
-        CX[Codex<br/><i>implementation · repo work<br/>security-sensitive changes</i>]
+    subgraph Reg["runtime-classes.json — the only place models are named"]
+        C1["reasoning"]
+        C2["coding"]
+        C3["image-orchestrator"]
+        C4["cloud-claude / cloud-codex"]
     end
-    subgraph Local["Local tiers — via Ollama"]
-        L1[Deep reasoning<br/><i>GPT-OSS 120B</i>]
-        L2[Coding / tools<br/><i>Qwen3 Coder Next</i>]
-        L3[Fast general<br/><i>Qwen3.6 27B</i>]
+    subgraph Res["Resolved runtimes"]
+        L1[Local reasoning<br/><i>Qwen3.6 35B A3B · OpenCode</i>]
+        L2[Local coding<br/><i>Qwen3 Coder 30B · OpenCode</i>]
+        L3[Image orchestrator<br/><i>conversational model +<br/>FLUX.2 Klein 9B via ComfyUI</i>]
+        CL[Cloud<br/><i>Claude · Codex — escalation</i>]
     end
-    Cloud --> H[buzz-acp harness<br/>one process per identity]
-    Local --> H
+    C1 --> L1
+    C2 --> L2
+    C3 --> L3
+    C4 --> CL
+    Res --> H[buzz-acp harness<br/>one process per identity]
     H --> R[(Relay)]
 ```
 
+Two mechanism findings make this work the way it does, and neither is obvious from the outside:
+
+- **A `.persona.md` rejects unknown fields.** `PersonaConfig` is strict, so factory-only metadata — the preferred runtime class, allowed tools, write scope, quality checks, escalation conditions — cannot live in the deployable persona. It lives in the `.role.md` *source* and the pack's build manifest, and is stripped during compilation. This is precisely why roles compile into packs instead of being authored as packs.
+- **A pack is an Open-Plugin-Spec directory,** not a config blob: `.plugin/plugin.json` plus `agents/*.persona.md`, validated by `buzz pack validate <dir>`.
+
 Governing constraints:
 
-- **Escalation, not replacement.** Cloud agents are retained for final authority and for when local inference is uncertain or unavailable.
+- **Escalation, not replacement.** Cloud runtimes are retained for final authority and for when local inference is uncertain or unavailable.
 - **Serialize heavyweight local models.** Autostart launches harnesses; it does not load models. Concurrent heavyweight requests are the failure mode — unload before role-switching.
-- **Never bulk-edit live agents.** One pilot at a time, identity and prompt preserved, acceptance suite re-run, rollback on any partial result.
+- **Never bulk-edit live agents by hand.** Model changes go through the registry and a guarded compile → validate → diff → stop → sync → relaunch → zero-drift lifecycle, with a separate explicit flag required before anything touches a deployment record.
+- **Identity survives the migration.** The sync maps compiled personas onto *existing* identities and preserves every cryptographic field. A persona is replaceable; a keypair is not.
 
 Evidence per assignment: [agents/07-runtime-and-llm-assignment-matrix.md](agents/07-runtime-and-llm-assignment-matrix.md).
 

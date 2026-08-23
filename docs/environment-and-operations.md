@@ -200,6 +200,24 @@ Unregister-ScheduledTask -TaskName 'Buzz Desktop Autostart' -Confirm:$false
 
 Autostart fan-out is per **configured community**, not per record. `managed_agents/runtime_commands.rs:471-477` filters on `start_on_app_launch && backend == Local` and then deliberately ignores the per-record relay pin, pairing every eligible agent with every configured community. An identity whose community is not currently configured in Desktop is simply never spawned, with no error surfaced.
 
+## Editing the agent registry: quit, patch, relaunch
+
+**Buzz Desktop rewrites its agent registry when it exits.** Patch the registry file while the app is running and your edit is silently discarded at quit — the app's in-memory state is authoritative and it serializes that state on the way out. The failure is quiet: the file looks correct while the app runs, and reverts once it closes.
+
+The only safe order:
+
+1. **Quit** the app fully and confirm no `buzz-desktop` process remains.
+2. **Patch** the registry, writing a dated rollback backup first.
+3. **Relaunch** the app.
+4. **Verify zero drift** — re-read the registry and diff it against what you intended to write. A field that did not survive is the signal that step 1 was incomplete.
+
+This applies to every mechanised change, including a declarative pack sync. The sync tooling refuses to run while the app is up for exactly this reason, and it writes its own per-pack backup before touching anything.
+
+Two properties worth preserving in any tool that edits this file:
+
+- **Never write partial state.** An interrupted patch leaves a registry that parses but no longer pairs definitions with deployments, and a broken pair is harder to diagnose than a missing one.
+- **Never touch cryptographic fields.** Personas are replaceable; keypairs are not. A sync should map new configuration onto existing identities and leave every identity field exactly as it found it.
+
 ## Production distinction
 
 ## Goose using Antigravity CLI

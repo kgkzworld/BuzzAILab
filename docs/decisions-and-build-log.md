@@ -117,7 +117,55 @@ Agent inventory that these decisions produced: [Buzz - Agent Roster](agent-roste
 
 **Status:** Accepted. All 34 identities now autostart; the audit command is in [Buzz - Environment and Operations](environment-and-operations.md).
 
+### 2026-08-21 — The roster is declarative; the model is chosen in one registry
+
+**Decision:** Agent definitions become model-independent `.role.md` sources. A single `config/runtime-classes.json` registry is the only file that names a model. A compiler resolves the two into deployable packs, and a guarded lifecycle syncs them onto existing identities.
+
+**Reason:** The fleet had grown to 85 paired definitions and deployments, each carrying a hand-edited model string. Swapping one model meant editing every record that referenced it, with nothing to detect the records that were missed. Roles and runtimes were entangled for no reason: nothing about a role's mission changes when the model underneath it changes.
+
+**Constraint discovered:** A deployable persona rejects unknown fields, so factory-only metadata — preferred runtime class, allowed tools, write scope, quality checks, escalation conditions — cannot live in the persona. It lives in the role source and the pack build manifest and is stripped at compile time. This is the reason roles compile into packs rather than being authored as packs.
+
+**Status:** Accepted and applied to all five grouped packs. Model changes now happen in the registry plus a lifecycle apply, never by hand-editing records.
+
+### 2026-08-23 — Workers execute without an identity; the controller owns publication
+
+**Decision:** Ordinary workers are roster entries, not Buzz identities. They execute ephemerally with a unique run ID and JSON `identity: null` and `buzz_pubkey: null`. Channel creation and artifact publication are performed by the controller's credential. Persistent identities and signing keys remain controller-only.
+
+**Reason:** Every worker that needs to publish does not need a keypair to do it. Issuing one makes every transient task a permanent identity to inventory, rotate, audit, and eventually revoke. Keeping the credential with the controller means a worker can be created, run, and discarded without changing the trust surface at all.
+
+**Status:** Accepted. Five persistent launch-enabled controllers remain; everything else is roster-only and ephemeral.
+
 ## Build log
+
+### 2026-08-23 — Native image routing corrected and validated
+
+**Goal:** Let an ordinary sentence — not a magic phrase — reach the illustration role through the native controller path, with the worker holding no identity.
+
+**Original failure:** The interceptor required synthetic wording: the literal phrase `image workflow`, a `Brief:` marker, and private/task-channel language. It passed every synthetic test. The first natural request a human typed fell through to the generic model classifier and was assigned to a vulnerability-management engineer, which declined it as out of scope. This was a classifier defect, not a bad roster match — the roster never got a chance to answer.
+
+**Second failure, found during the corrected run:** One queue flush contained both the user's request and the controller's own previous failed reply. The helper concatenated them, so a failed reply became part of the next request's instructions. The correction selects only the individual event that matched image-creation intent, and takes the requester's public key from that same event.
+
+**Change:** The classifier now recognizes explicit creation intent combined with `image`, `illustration`, or `artwork`, with a negative case keeping container-image vulnerability review out of the generation path. The dispatcher pins an `image-generate` capability, which resolves deterministically to the illustration role.
+
+**Verification:** Two live runs. The second was structured as an isolation test: a decoy message was sent first, then the request, so one flush window could hold both. The decoy was answered conversationally and never entered the image path. The resulting channel charter carried only the matching request — no decoy text — and the run produced one private review channel, one upload, a null worker identity and public key, and a structured receipt in the intake DM. Focused routing regressions, 46 harness tests, and a zero-drift fleet lifecycle all passed alongside it.
+
+**Rollback:** The classifier is additive; removing the natural-language branch restores the previous synthetic-only trigger without touching the dispatcher or the roster.
+
+### 2026-08-21 — Declarative fleet cutover
+
+**Goal:** Move all live agents onto compiled, model-independent role sources without disturbing a single identity.
+
+**Change:** Exported the live fleet, reconciled a historical 88-agent count to the authoritative 85 definitions paired with 85 deployments after retiring three obsolete handles, generated five grouped packs — `career` (11), `core-managers` (11), `narrative-creative` (8), `research-other` (5), `security-platform` (50) — and synced each onto its existing identities behind a guard that requires the app to be stopped, writes a per-pack rollback backup, and refuses incomplete name pairing.
+
+**Result:** Zero drift across all five packs after relaunch, 85 unique deployment public keys, no broken definition/deployment pairs.
+
+**Problem encountered:** The desktop app has pack validation and inspection but no pack-install command, and its boot migration detaches legacy directory-backed teams. Copying packs into the old teams path is actively wrong.
+
+**Resolution:** Install means a guarded declarative sync onto existing identities, not a filesystem drop.
+
+**Discipline that this depends on:** The app rewrites its agent registry on exit. Patch a live registry while it is running and the edit is gone at quit. The order is always quit, patch, relaunch, verify zero drift.
+
+**Rollback:** The pre-migration registry snapshot restores the previous fleet exactly, and each pack sync wrote its own dated backup.
 
 ### 2026-08-15 — macOS and server handoff audit
 
